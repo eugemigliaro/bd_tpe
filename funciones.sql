@@ -116,7 +116,9 @@ EXECUTE PROCEDURE procesar_pago();
 -- ============================================================================
 
 -- Ajustar la ruta si el archivo pagos.csv se encuentra en otra ubicación.
-\copy PAGO(fecha, medio_pago, id_transaccion, cliente_email, modalidad, monto) FROM 'pagos.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+COPY PAGO(fecha, medio_pago, id_transaccion, cliente_email, modalidad, monto)
+FROM '/home/sallegretti/Documents/itba/a3/q1/BD1/bd_tpe/pagos.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',');
 
 -- ============================================================================
 -- Punto (d): función de consolidación consolidar_cliente(cliente_email)
