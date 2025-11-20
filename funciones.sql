@@ -116,9 +116,7 @@ EXECUTE PROCEDURE procesar_pago();
 -- ============================================================================
 
 -- Ajustar la ruta si el archivo pagos.csv se encuentra en otra ubicación.
-COPY PAGO(fecha, medio_pago, id_transaccion, cliente_email, modalidad, monto)
-FROM '/home/eugemigliaro/bd_tpe/pagos.csv'
-WITH (FORMAT csv, HEADER true, DELIMITER ',');
+\copy PAGO(fecha, medio_pago, id_transaccion, cliente_email, modalidad, monto) FROM 'pagos.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
 
 -- ============================================================================
 -- Punto (d): función de consolidación consolidar_cliente(cliente_email)
@@ -147,12 +145,12 @@ BEGIN
         IF v_periodo = 0 THEN
             RAISE NOTICE '== Cliente: % ==', p_email;
             v_periodo := 1;
-            RAISE NOTICE 'Periodo #%s', v_periodo;
+            RAISE NOTICE 'Periodo #%', v_periodo;
             v_periodo_inicio := rec.fecha_inicio;
             v_total_periodo := 0;
         ELSE
             IF v_periodo_fin IS NOT NULL AND rec.fecha_inicio > v_periodo_fin + 1 THEN
-                RAISE NOTICE '(Fin del periodo #%s: %s a %s) | Total periodo: %s',
+                RAISE NOTICE '(Fin del periodo #%: % a %) | Total periodo: %',
                     v_periodo,
                     v_periodo_inicio,
                     v_periodo_fin,
@@ -160,7 +158,7 @@ BEGIN
                 v_total_general := v_total_general + v_total_periodo;
                 RAISE NOTICE '--- PERIODO DE BAJA ---';
                 v_periodo := v_periodo + 1;
-                RAISE NOTICE 'Periodo #%s', v_periodo;
+                RAISE NOTICE 'Periodo #%', v_periodo;
                 v_periodo_inicio := rec.fecha_inicio;
                 v_total_periodo := 0;
             END IF;
@@ -184,13 +182,13 @@ BEGIN
         RAISE NOTICE '== Cliente: % ==', p_email;
         RAISE NOTICE 'No posee suscripciones registradas.';
     ELSE
-        RAISE NOTICE '(Fin del periodo #%s: %s a %s) | Total periodo: %s',
+        RAISE NOTICE '(Fin del periodo #%: % a %) | Total periodo: %',
             v_periodo,
             v_periodo_inicio,
             v_periodo_fin,
             CASE WHEN v_total_periodo = 1 THEN '1 mes' ELSE v_total_periodo || ' meses' END;
         v_total_general := v_total_general + v_total_periodo;
-        RAISE NOTICE '== Total acumulado: %s ==',
+        RAISE NOTICE '== Total acumulado: % ==',
             CASE WHEN v_total_general = 1 THEN '1 mes' ELSE v_total_general || ' meses' END;
     END IF;
 END;
