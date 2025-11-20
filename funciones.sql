@@ -58,7 +58,6 @@ BEGIN
       INTO v_ultima_misma_modalidad
       FROM SUSCRIPCION
      WHERE cliente_email = NEW.cliente_email
-       AND modalidad = NEW.modalidad
      ORDER BY fecha_fin DESC
      LIMIT 1;
 
@@ -118,7 +117,7 @@ EXECUTE PROCEDURE procesar_pago();
 
 -- Ajustar la ruta si el archivo pagos.csv se encuentra en otra ubicación.
 COPY PAGO(fecha, medio_pago, id_transaccion, cliente_email, modalidad, monto)
-FROM '/home/eugemigliaro/Documents/facultad/tercero/bd_tpe/pagos.csv'
+FROM '/home/eugemigliaro/bd_tpe/pagos.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',');
 
 -- ============================================================================
